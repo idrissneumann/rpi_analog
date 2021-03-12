@@ -1,0 +1,13 @@
+{
+  "log_level": "INFO",
+  "elastic_hosts": ["localhost"],
+  "elastic_port": 9200,
+  "elastic_scheme": "http",
+  "wait_time": 60,
+  "ph_calibration_offset" : 5,
+  "vp_sep" : "-vp-sep-",
+  "ph_index_prefix": "ph",
+  "ec_index_prefix": "ec",
+  "water_temp_index_prefix": "water_temp",
+  "flow_meter_index_prefix": "flow_meter"
+}

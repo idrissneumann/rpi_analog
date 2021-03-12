@@ -1,0 +1,44 @@
+version: "3.3"
+
+services:
+  vanalog01:
+    image: comworkio/veggiepi-analog:latest
+    container_name: veggie_vanalog01
+    privileged: true
+    environment:
+      - VEGGIEPI_elastic_hosts=veggie_es01
+      - VEGGIEPI_wait_time=60
+      - VEGGIEPI_index_prefix=humidity_and_temperature
+    networks:
+      - veggiepi
+  es01:
+    image: comworkio/elasticsearch:7.10.2-1.0-arm
+    container_name: veggie_es01
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - veggiepi
+    volumes:
+      - veggiepid01:/usr/share/elasticsearch/data
+  kib01:
+    image: comworkio/kibana:7.10.2-1.2-arm
+    container_name: veggie_kib01
+    ports:
+      - 5601:5601
+    environment:
+      - ES_PROTO=http
+      - ES_HOST=es01
+      - ES_PORT=9200
+    networks:
+      - veggiepi
+    depends_on: 
+      - es01
+
+volumes:
+  veggiepid01:
+    driver: local
+
+networks:
+  veggiepi:
+    driver: bridge

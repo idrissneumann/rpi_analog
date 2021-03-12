@@ -1,0 +1,8 @@
+version: "3.3"
+
+services: 
+  veggiepi-flow:
+    image: comworkio/veggiepi-flow:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
