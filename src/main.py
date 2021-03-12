@@ -75,9 +75,9 @@ while True:
             vals = serial_value.split(VP_SEPARATOR)
             for val in vals:
                 index_val("vp-io-0 : ", val, ec_index_name, "ec_value", "ms/cm")
-                index_val("vp-io-1 : ", val, ec_index_name, "ph_value", "raw")
-                index_val("vp-io-2 : ", val, ec_index_name, "temperature_value", "celsius")
-                index_val("vp-io-3 : ", val, ec_index_name, "flow_value", "l/h")
+                index_val("vp-io-1 : ", val, ph_index_name, "ph_value", "raw")
+                index_val("vp-io-2 : ", val, flow_index_name, "temperature_value", "celsius")
+                index_val("vp-io-3 : ", val, wt_index_name, "flow_value", "l/h")
         else:
             log_msg(LOG_LEVEL, "ERROR", "Failed to retrieve values...")
     except:
