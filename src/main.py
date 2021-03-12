@@ -45,11 +45,23 @@ WAIT_TIME = cast_int(conf['wait_time'])
 
 es = es_connect(LOG_LEVEL, ES_SCHEME, ES_HOSTS, ES_PORT, ES_USER, ES_PASS, ES_SUBPATH)
 
+def index_val(match_prefix, val, index_name, field_name, field_format):
+    if match_prefix in val:
+        log_msg(LOG_LEVEL, "INFO", "Received ec value of : {}".format(val.strip(match_prefix)))
+        timestamp = datetime.now().isoformat()
+        vid = "{}_{}".format(field_name, timestamp)
+        sval = float(val.strip(match_prefix).strip("\r\n"))
+        record={field_name: sval, "value_format": field_format, "timestamp": timestamp}
+        if "ph_value" == field_name:
+            record['calibration_offset'] = PH_CAL
+        es.index(index=index_name, id=vid, body=record)
+
 while True:
-    ec_index_name = "{}_{}".format(EC_INDEX_PREFIX, date.today().strftime("%Y%m%d"))
-    ph_index_name = "{}_{}".format(PH_INDEX_PREFIX, date.today().strftime("%Y%m%d"))
-    flow_index_name = "{}_{}".format(FLOW_INDEX_PREFIX, date.today().strftime("%Y%m%d"))
-    wt_index_name = "{}_{}".format(WT_INDEX_PREFIX, date.today().strftime("%Y%m%d"))
+    date_suffix = date.today().strftime("%Y%m%d")
+    ec_index_name = "{}_{}".format(EC_INDEX_PREFIX, date_suffix)
+    ph_index_name = "{}_{}".format(PH_INDEX_PREFIX, date_suffix)
+    flow_index_name = "{}_{}".format(FLOW_INDEX_PREFIX, date_suffix)
+    wt_index_name = "{}_{}".format(WT_INDEX_PREFIX, date_suffix)
 
     es.indices.create(index=ec_index_name, ignore=400)
     es.indices.create(index=ph_index_name, ignore=400)
@@ -62,37 +74,10 @@ while True:
         if serial_value is not None:
             vals = serial_value.split(VP_SEPARATOR)
             for val in vals:
-                if "vp-io-0 : " in val:
-                    log_msg(LOG_LEVEL, "INFO", "Received ec value of : {}".format(val.strip("vp-io-0 : ")))
-                    timestamp = datetime.now()
-                    ec_val = float(val.strip("vp-io-0 : ").strip("\r\n"))
-                    es.index(index=ec_index_name, id=timestamp,
-                             body={"ec_value": ec_val, "value_format": "ms/cm",
-                                   "timestamp": timestamp})
-                if "vp-io-1 : " in val:
-                    log_msg(LOG_LEVEL, "INFO", "Received ph value of : {}".format(val.strip("vp-io-1 : ")))
-                    timestamp = datetime.now()
-                    ph_val = float(val.strip("vp-io-1 : ").strip("\r\n"))
-                    ph_val += PH_CAL
-                    es.index(index=ph_index_name, id=timestamp,
-                             body={"ph_value": ph_val, "value_format": "raw",
-                                   "calibration_offset": PH_CAL,
-                                   "timestamp": timestamp})
-                if "vp-io-2 : " in val:
-                    log_msg(LOG_LEVEL, "INFO", "Received water temperature value of : {}".format(val.strip("vp-io-2 : ")))
-                    timestamp = datetime.now()
-                    wt_val = float(val.strip("vp-io-2 : ").strip("\r\n"))
-                    es.index(index=wt_index_name, id=timestamp,
-                             body={"temperature_value": wt_val, "value_format": "celsius",
-                                   "timestamp": timestamp})
-                if "vp-io-3 : " in val:
-                    log_msg(LOG_LEVEL, "INFO", "Received flow meter value of : {}".format(val.strip("vp-io-3 : ")))
-                    timestamp = datetime.now()
-                    flow_val = float(val.strip("vp-io-3 : ").strip("\r\n"))
-                    es.index(index=flow_index_name, id=timestamp,
-                             body={"flow_value": flow_val, "value_format": "l/h",
-                                   "timestamp": timestamp})
-
+                index_val("vp-io-0 : ", val, ec_index_name, "ec_value", "ms/cm")
+                index_val("vp-io-1 : ", val, ec_index_name, "ph_value", "raw")
+                index_val("vp-io-2 : ", val, ec_index_name, "temperature_value", "celsius")
+                index_val("vp-io-3 : ", val, ec_index_name, "flow_value", "l/h")
         else:
             log_msg(LOG_LEVEL, "ERROR", "Failed to retrieve values...")
     except:
