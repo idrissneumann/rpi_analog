@@ -1,4 +1,4 @@
-# Humidity and temperature sensor
+# Analog sensors
 
 This project aims to collect the data from analog sensors (ph, electrical conductivity, water temperature and flow) plugged in an Arduino Leonardo and index those data into Elasticsearch hosted on a raspberrypi and make some beautiful dashboards using Kibana hosted too on the raspberrypi.
 
