@@ -4,7 +4,7 @@ This project aims to collect the data from analog sensors (ph, electrical conduc
 
 The elasticstack images used are available [here](https://gitlab.comwork.io/oss/elasticstack/elasticstack-arm) in opensource too.
 
-This project is used by the [veggiepi.com](https://www.veggiepi.com) project.
+This project is used by the [veggiepi](https://veggiepi.comwork.io) project.
 
 ## Table of content
 
