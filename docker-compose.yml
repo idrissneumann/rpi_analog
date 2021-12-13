@@ -12,7 +12,7 @@ services:
     networks:
       - veggiepi
   es01:
-    image: comworkio/elasticsearch:7.16.1-1.1-arm
+    image: comworkio/elasticsearch:7.16.1-1.13-arm
     container_name: veggie_es01
     ports:
       - 9200:9200
@@ -22,7 +22,7 @@ services:
     volumes:
       - veggiepid01:/usr/share/elasticsearch/data
   kib01:
-    image: comworkio/kibana:7.16.1-1.1-arm
+    image: comworkio/kibana:7.16.1-1.7-arm
     container_name: veggie_kib01
     ports:
       - 5601:5601
