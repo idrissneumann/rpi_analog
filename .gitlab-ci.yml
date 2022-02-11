@@ -9,7 +9,7 @@ mirror:
   only:
     - /^(main.*)$/
   tags:
-    - veggieoss
+    - mirror
 
 build-img:
   stage: publish

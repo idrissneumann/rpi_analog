@@ -15,6 +15,7 @@ This project is used by the [veggiepi](https://veggiepi.comwork.io) project.
 * Main repo: https://gitlab.comwork.io/oss/veggiepi/analog
 * Github mirror backup: https://github.com/idrissneumann/rpi_analog
 * Gitlab mirror backup: https://gitlab.com/ineumann/rpi_analog
+* Bitbucket mirror backup: https://bitbucket.org/idrissneumann/rpi_analog
 
 ## Run locally using docker-compose
 
